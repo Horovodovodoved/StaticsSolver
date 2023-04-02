@@ -8,43 +8,64 @@ public class Task {
     bodies.add(new Body());
   }
   
-  public void addExternalForce(int body_idx, Point point,
+  public void addExternalForce(String id, int body_idx, Point point,
                                double value, double angle) {
-    KnownForce force = new KnownForce(body_idx, point, value, angle);
+    KnownForce force = new KnownForce(id, body_idx, point, value, angle); //id?
     bodies.get(body_idx).known_forces.add(force);
+    KnownForceProjection x_projection =
+        new KnownForceProjection(force, "x");
+    KnownForceProjection y_projection =
+        new KnownForceProjection(force, "y");
+    bodies.get(body_idx).x_known_map.put(x_projection.id, x_projection);
+    bodies.get(body_idx).y_known_map.put(y_projection.id, y_projection);
   }
   
-  public void addUnknownExternalForce(int body_idx, Point point) {
-    UnknownForce force = new UnknownForce(body_idx, point);
+  public void addUnknownExternalForce(String id, int body_idx, Point point) {
+    UnknownForce force = new UnknownForce(id, body_idx, point);
     num_variables += 2;
+    
     bodies.get(body_idx).unknown_forces.add(force);
+    UnknownForceProjection x_projection =
+        new UnknownForceProjection(force, "x");
+    UnknownForceProjection y_projection =
+        new UnknownForceProjection(force, "y");
+    bodies.get(body_idx).x_unknown_map.put(x_projection.id, x_projection);
+    bodies.get(body_idx).y_unknown_map.put(y_projection.id, y_projection);
   }
   
-  public void addUnknownExternalForce(int body_idx, Point point,
+  public void addUnknownExternalForce(String id, int body_idx, Point point,
                                       boolean isAbsoluteValueKnown,
                                       double known_param) {
-    UnknownForce force = new UnknownForce(body_idx, point,
+    UnknownForce force = new UnknownForce(id, body_idx, point,
         isAbsoluteValueKnown, known_param);
     num_variables += 1;
+    
     bodies.get(body_idx).unknown_forces.add(force);
+    UnknownForceProjection x_projection =
+        new UnknownForceProjection(force, "x");
+    UnknownForceProjection y_projection =
+        new UnknownForceProjection(force, "y");
+    bodies.get(body_idx).x_unknown_map.put(x_projection.id, x_projection);
+    bodies.get(body_idx).y_unknown_map.put(y_projection.id, y_projection);
   }
   
-  public void addHingedConnection(int body_1_idx, int body_2_idx, Point point) {
-    UnknownForce force_1 = new UnknownForce(body_1_idx, point);
-    UnknownForce force_2 = new UnknownForce(body_2_idx, point);
-    bodies.get(body_1_idx).unknown_forces.add(force_1);
-    bodies.get(body_2_idx).unknown_forces.add(force_2);
-    // todo: Каким-то образом оставить информацию для решателя о том, что
+  public void addHingedConnection(String id_1, String id_2,
+                                  int body_1_idx, int body_2_idx, Point point) {
+    addUnknownExternalForce(id_1, body_1_idx, point);
+    addUnknownExternalForce(id_2, body_2_idx, point);
+    // todo: Каким-то образом оставить в id_1 и id_2 информацию для решателя
+    //  о том, что
     //  force_1 = -force_2
     num_variables += 2;
   }
   
-  public void addHingedSupport(int body_idx, Point point) {
-    addUnknownExternalForce(body_idx, point);
+  public void addHingedSupport(String id, int body_idx, Point point) {
+    addUnknownExternalForce(id, body_idx, point);
   }
   
-  public void addSmoothSupport(int body_idx, Point point, double normal_angle) {
-    addUnknownExternalForce(body_idx, point,
+  public void addSmoothSupport(String id, int body_idx,
+                               Point point, double normal_angle) {
+    addUnknownExternalForce(id, body_idx, point,
         false, normal_angle);
   }
 }
