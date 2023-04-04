@@ -2,7 +2,9 @@ import java.util.ArrayList;
 
 public class Task {
   ArrayList<Body> bodies = new ArrayList<>();
-  int num_variables = 0;
+  int num_variables = 0; // projections; needless
+  ArrayList<UnknownForce> unknown_forces = new ArrayList<>();
+  ArrayList<UnknownForceProjection> unknown_projections = new ArrayList<>();
   
   public void addBody() {
     bodies.add(new Body());
@@ -10,7 +12,7 @@ public class Task {
   
   public void addExternalForce(String id, int body_idx, Point point,
                                double value, double angle) {
-    KnownForce force = new KnownForce(id, body_idx, point, value, angle); //id?
+    KnownForce force = new KnownForce(id, body_idx, point, value, angle);
     bodies.get(body_idx).known_forces.add(force);
     KnownForceProjection x_projection =
         new KnownForceProjection(force, "x");
@@ -22,6 +24,7 @@ public class Task {
   
   public void addUnknownExternalForce(String id, int body_idx, Point point) {
     UnknownForce force = new UnknownForce(id, body_idx, point);
+    unknown_forces.add(force);
     num_variables += 2;
     
     bodies.get(body_idx).unknown_forces.add(force);
@@ -31,6 +34,8 @@ public class Task {
         new UnknownForceProjection(force, "y");
     bodies.get(body_idx).x_unknown_map.put(x_projection.id, x_projection);
     bodies.get(body_idx).y_unknown_map.put(y_projection.id, y_projection);
+    unknown_projections.add(x_projection);
+    unknown_projections.add(y_projection);
   }
   
   public void addUnknownExternalForce(String id, int body_idx, Point point,
@@ -38,6 +43,7 @@ public class Task {
                                       double known_param) {
     UnknownForce force = new UnknownForce(id, body_idx, point,
         isAbsoluteValueKnown, known_param);
+    unknown_forces.add(force);
     num_variables += 1;
     
     bodies.get(body_idx).unknown_forces.add(force);
@@ -47,6 +53,8 @@ public class Task {
         new UnknownForceProjection(force, "y");
     bodies.get(body_idx).x_unknown_map.put(x_projection.id, x_projection);
     bodies.get(body_idx).y_unknown_map.put(y_projection.id, y_projection);
+    unknown_projections.add(x_projection);
+    unknown_projections.add(y_projection);
   }
   
   public void addHingedConnection(String id_1, String id_2,
