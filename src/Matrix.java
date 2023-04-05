@@ -19,26 +19,26 @@ public class Matrix {
         matrix = new double[dimension][dimension];
     }
 
+    /*
+    Единственный метод, который нужно использовать - solve(для решения матричного уравнения).
+    Остальные за ненадобностью в остальной части преокта были помечены модификатором private.
+     */
+
+    public double[][] solve(Matrix mainMatrix, Matrix column) {
+        return multiplyMatrices(column.getArray(), inverse(mainMatrix).getArray());
+    }
+
+
+
     private double[][] getArray () {
         return matrix;
     }
 
-    public int getDimension() {
+    private int getDimension() {
         return dimension;
     }
 
-    public Matrix transpose () {
-        Matrix X = new Matrix(dimension);
-        double[][] C = X.getArray();
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                C[j][i] = matrix[i][j];
-            }
-        }
-        return X;
-    }
-
-    public double determinant()
+    private double determinant()
     {
         if (dimension == 1) {
             return matrix[0][0];
@@ -94,6 +94,26 @@ public class Matrix {
         }
 
         return new Matrix(inverse);
+    }
+
+    private double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
+        double[][] result = new double[firstMatrix.length][secondMatrix[0].length];
+
+        for (int row = 0; row < result.length; row++) {
+            for (int col = 0; col < result[row].length; col++) {
+                result[row][col] = multiplyMatricesCell(firstMatrix, secondMatrix, row, col);
+            }
+        }
+
+        return result;
+    }
+
+    private double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
+        double cell = 0;
+        for (int i = 0; i < secondMatrix.length; i++) {
+            cell += firstMatrix[row][i] * secondMatrix[i][col];
+        }
+        return cell;
     }
 
 }
