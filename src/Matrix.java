@@ -24,7 +24,7 @@ public class Matrix {
     Остальные за ненадобностью в остальной части преокта были помечены модификатором private.
      */
 
-    public double[][] solve(Matrix mainMatrix, Matrix column) {
+    public static double[][] solve(Matrix mainMatrix, Matrix column) {
         return multiplyMatrices(column.getArray(), inverse(mainMatrix).getArray());
     }
 
@@ -96,7 +96,7 @@ public class Matrix {
         return new Matrix(inverse);
     }
 
-    private double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
+    private static double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
         double[][] result = new double[firstMatrix.length][secondMatrix[0].length];
 
         for (int row = 0; row < result.length; row++) {
@@ -108,7 +108,7 @@ public class Matrix {
         return result;
     }
 
-    private double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
+    private static double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
         double cell = 0;
         for (int i = 0; i < secondMatrix.length; i++) {
             cell += firstMatrix[row][i] * secondMatrix[i][col];
