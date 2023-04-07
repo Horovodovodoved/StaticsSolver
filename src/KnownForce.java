@@ -22,9 +22,9 @@ public class KnownForce {
         return Math.cos(angle * (Math.PI/180)) * value;
       case Y:
         return Math.sin(angle * (Math.PI/180)) * value;
+      default:
+        return 0;
     }
-
-    return 0;
   }
 
 
