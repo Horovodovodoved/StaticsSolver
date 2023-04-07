@@ -1,3 +1,4 @@
+@Deprecated
 public class KnownForceProjection {
   String id;
   int body_idx;
