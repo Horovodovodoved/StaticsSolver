@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+
 public class Task {
   ArrayList<Body> bodies = new ArrayList<>();
   int num_variables = 0; // projections; needless
@@ -75,5 +76,9 @@ public class Task {
                                Point point, double normal_angle) {
     addUnknownExternalForce(id, body_idx, point,
         false, normal_angle);
+  }
+
+  public ArrayList<Body> getBodies() {
+    return bodies;
   }
 }

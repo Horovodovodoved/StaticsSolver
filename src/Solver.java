@@ -1,8 +1,16 @@
+import java.util.ArrayList;
+
 public class Solver {
   static int n = 5; //условно количество переменных
+  ArrayList<Body> bodies = new ArrayList<>();
 
+  public void setBodies(Task task){
+    this.bodies = task.getBodies();
+  }
 
   public static Answer getSolution(Task task) {
+
+
     double[][] A = new double[n][n];
     double[] b = new double[n];
     return null;
@@ -24,11 +32,17 @@ public class Solver {
 
   //У тела будет массив с телами, у которых есть массивы сил для каждого тела
   //Т.е условно будет 2 с X и Y
-  public static double[][] setAMatrix(){
-    double[][] A = new double[n][n];
-    int indexForForces = arrayForces.length;
-    String forceForMatrix = "X";
-    for(int i = 1;i<=A.length;i++){
+  public ArrayList<double[]> setAMatrix(){
+    ArrayList<double[]> A = new ArrayList<>();
+    addXEquations(A);
+    addYEquations(A);
+    addMEquations(A);
+    addEquationsForPartiallyKnownForces(A);
+
+
+ /*   int indexForForces = arrayForces.length;
+    String forceForMatrix = "X";*/
+/*    for(int i = 1;i<=A.length;i++){
       for (int j = 1;j<=A.length;j++){
         switch (forceForMatrix){
           case "X":
@@ -41,9 +55,8 @@ public class Solver {
             A[i][j] = bodyArray[i].getMForce(j);
             break;
         }
-
       }
-    }
+    }*/
     return A;
   }
   public static double[] setBMatrix(){
@@ -65,7 +78,7 @@ public class Solver {
 
   //как ты и сказал, нужен массив с неизвестными силами
   //arrayUnknownForces - такой массив
-  public void ifWeKnowAngle(){
+  public void ifWeKnowSomething(){
     int index = 0;
     while (true) {
       Body body = bodyArray[index];
@@ -79,6 +92,36 @@ public class Solver {
       }
     }
   }
+
+
+  private void addXEquations(ArrayList<double[]> A) {
+    for(int i = 0; i < bodies.size() ;i++) {
+      double[] row = bodies[i].getXForces();
+      A.add(row);
+    }
+  }
+
+  private void addYEquations(ArrayList<double[]> A) {
+    for(int i = 0; i < bodies.size();i++) {
+      double[] row = bodyArray[i].getYForces();
+      A.add(row);
+    }
+  }
+
+  private void addMEquations(ArrayList<double[]> A) {
+    for(int i = 0; i < bodies.size();i++) {
+      double[] row = bodyArray[i].getMoments();
+      A.add(row);
+    }
+  }
+
+  private void addEquationsForPartiallyKnownForces(ArrayList<double[]> A) {
+    for(int i = 0; i < forcesArray.length;i++) {
+      double[] row = bodyArray[i].getMoments();
+      A.add(row);
+    }
+  }
+
 
   //методы для заполнения матриц
 //  public static void setMoments(){}
