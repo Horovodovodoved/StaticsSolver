@@ -1,3 +1,4 @@
+@Deprecated
 public class UnknownForce {
   String id;
   int body_idx;

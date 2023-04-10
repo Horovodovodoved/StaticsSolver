@@ -1,3 +1,4 @@
+@Deprecated
 public class UnknownForceProjection {
   String id;
   UnknownForce force;
