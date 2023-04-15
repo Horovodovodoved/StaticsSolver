@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Task {
-  private int variables_num;
+  private static int variables_num = 0;
   private ArrayList<Body> bodies = new ArrayList<>();
   private ArrayList<HingedConnection> hinged_connections = new ArrayList<>();
   
@@ -58,5 +58,5 @@ public class Task {
     return hinged_connections;
   }
   
-  public int getVariablesNum() { return variables_num; }
+  public static int getVariablesNum() { return variables_num; }
 }

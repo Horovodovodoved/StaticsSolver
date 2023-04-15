@@ -1,68 +1,92 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Body {
-  private ArrayList<KnownForce> knownForces = new ArrayList<>();
-  @Deprecated
-  private ArrayList<UnknownForce> unknownForces = new ArrayList<>();
-
-  private Map<String, KnownForceProjection> x_knownMap = new HashMap<>();
-  private Map<String, KnownForceProjection> y_knownMap = new HashMap<>();
-  @Deprecated
-  private Map<String, UnknownForceProjection> x_unknownMap = new HashMap<>();
-  @Deprecated
-  private Map<String, UnknownForceProjection> y_unknownMap = new HashMap<>();
-
-  public ArrayList<KnownForce> getKnownForces() {
-    return knownForces;
+  private ArrayList<Force> forces = new ArrayList<>();
+  
+  public void addForce(Force force) {
+    forces.add(force);
   }
-
-  public void setKnownForces(ArrayList<KnownForce> knownForces) {
-    this.knownForces = knownForces;
+  
+  
+  public double[] getXCoefs() {
+    double[] row = new double[Task.getVariablesNum()];
+    for (Force force : forces) {
+      if (!force.IsForceKnown()) {
+        row[force.getXId() - 1] = 1; // 'cause 1-numeration!!!!!!
+      }
+    }
+    return row;
   }
-
-  public ArrayList<UnknownForce> getUnknownForces() {
-    return unknownForces;
+  
+  public double[] getXRightConst() { // "right" because it's after "=" mark
+    double sum = 0;
+    for (Force force : forces) {
+      if (force.IsForceKnown()) {
+        sum += force.getProjection(Axis.X);
+      }
+    }
+    double right_const = -sum;
+    return new double[] {right_const};
   }
-
-  public void setUnknownForces(ArrayList<UnknownForce> unknownForces) {
-    this.unknownForces = unknownForces;
+  
+  public double[] getYCoefs() {
+    double[] row = new double[Task.getVariablesNum()];
+    for (Force force : forces) {
+      if (!force.IsForceKnown()) {
+        row[force.getYId() - 1] = 1;
+      }
+    }
+    return row;
   }
-
-  public Map<String, KnownForceProjection> getX_knownMap() {
-    return x_knownMap;
+  
+  public double[] getYRightConst() {
+    double sum = 0;
+    for (Force force : forces) {
+      if (force.IsForceKnown()) {
+        sum += force.getProjection(Axis.Y);
+      }
+    }
+    double right_const = -sum;
+    return new double[] {right_const};
   }
-
-  public void setX_knownMap(Map<String, KnownForceProjection> x_knownMap) {
-    this.x_knownMap = x_knownMap;
+  
+  public double[] getMCoefs() {
+    double[] row = new double[Task.getVariablesNum()];
+    for (Force force : forces) {
+      if (!force.IsForceKnown()) {
+        // любопытно: следующие выражения для моментов
+        // не зависят от положения точки на плоскости;
+        // я нашел поистине удивительное доказательство этого предложения,
+        // но комментарии здесь слишком узки для того, чтобы вместить его
+        row[force.getXId() - 1] = force.getPoint().getY();
+        row[force.getYId() - 1] = -force.getPoint().getX();
+      }
+    }
+    return row;
   }
-
-  public Map<String, KnownForceProjection> getY_knownMap() {
-    return y_knownMap;
+  
+  public double[] getMRightConst() {
+    double sum = 0;
+    for (Force force : forces) {
+      if (force.IsForceKnown()) {
+        sum += force.getProjection(Axis.X) * force.getPoint().getY();
+        sum += force.getProjection(Axis.Y) * -force.getPoint().getX();
+      }
+    }
+    double right_const = -sum;
+    return new double[] {right_const};
   }
-
-  public void setY_knownMap(Map<String, KnownForceProjection> y_knownMap) {
-    this.y_knownMap = y_knownMap;
-  }
-
-  public Map<String, UnknownForceProjection> getX_unknownMap() {
-    return x_unknownMap;
-  }
-
-  public void setX_unknownMap(Map<String, UnknownForceProjection> x_unknownMap) {
-    this.x_unknownMap = x_unknownMap;
-  }
-
-  public Map<String, UnknownForceProjection> getY_unknownMap() {
-    return y_unknownMap;
-  }
-
-  public void setY_unknownMap(Map<String, UnknownForceProjection> y_unknownMap) {
-    this.y_unknownMap = y_unknownMap;
-  }
-
-  public void addForce(KnownForce force) {
-    knownForces.add(force);
+  
+  public ArrayList<double[]> getKnownAngleCoefs() {
+    ArrayList<double[]> rows = new ArrayList<>();
+    for (Force force : forces) {
+      if (!force.IsForceKnown() && force.IsAngleKnown()) {
+        double[] row = new double[Task.getVariablesNum()];
+        row[force.getYId() - 1] = 1;
+        row[force.getXId() - 1] = -Math.tan(Math.toRadians(force.getAngle()));
+        rows.add(row);
+      }
+    }
+    return rows;
   }
 }

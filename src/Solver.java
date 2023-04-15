@@ -10,7 +10,7 @@ public class Solver {
     makeMatrixEquation();
   }
   
-  public Answer getAnswer() {
+  public Answer getAnswer() { //todo
     return null;
   }
   
@@ -24,26 +24,29 @@ public class Solver {
     addKnownAngleEquations();
     addHingedConnectionEquations();
     checkEquationsNumber();
+    // todo: решить Ax=b, т. е. найти x;
+    //  придумать, каким будет Answer и подогнать под него имеющийся ответ
   }
   
   private void addXEquations() {
     for (Body body : task.getBodies()) {
       A.add(body.getXCoefs());
-      b.add(body.getXLeftConst()); // "left" because it's before "=" mark
+      // "right" because it's after "=" mark
+      b.add(body.getXRightConst());
     }
   }
   
   private void addYEquations() {
     for (Body body : task.getBodies()) {
       A.add(body.getYCoefs());
-      b.add(body.getYLeftConst());
+      b.add(body.getYRightConst());
     }
   }
   
   private void addMEquations() {
     for (Body body : task.getBodies()) {
       A.add(body.getMCoefs());
-      b.add(body.getMLeftConst());
+      b.add(body.getMRightConst());
     }
   }
   
@@ -68,11 +71,7 @@ public class Solver {
   private void checkEquationsNumber() {
     //todo
     // если больше:
-    //   проверить на совместность
-    //   если совместна:
-    //     выкинуть лишние
-    //   иначе:
-    //     выдать ошибку
+    //   выкинуть лишние
     // если меньше:
     //   выдать ошибку
   }

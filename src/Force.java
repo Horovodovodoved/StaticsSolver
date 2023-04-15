@@ -1,6 +1,6 @@
 public class Force {
-  private int x_id;
-  private int y_id;
+  private int x_id; // 1-numeration!!!!!!!!!!!!!!!!!!!!
+  private int y_id; // 1-numeration!!!!!!!!!!!!!!!!!!!!
   private boolean is_force_known = true;
   private boolean is_angle_known = true;
   private final int body_index;
@@ -38,10 +38,7 @@ public class Force {
 
 
 
-  public double getProjection(Axis axis) throws Exception {
-    if (!is_force_known) {
-      throw new Exception("Нельзя найти проекцию неизвестной силы!");
-    }
+  public double getProjection(Axis axis) { // only for known forces
     switch(axis) {
       case X:
         return Math.cos(Math.toRadians(angle)) * value;
