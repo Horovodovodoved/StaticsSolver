@@ -2,12 +2,14 @@ import java.util.ArrayList;
 
 public class Solver {
   Task task;
+  Answer answer;
   ArrayList<double[]> A = new ArrayList<>();
   ArrayList<double[]> b = new ArrayList<>();
   
   public Solver(Task task) {
     this.task = task;
     makeMatrixEquation();
+    answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
   }
   
   public Answer getAnswer() { //todo
