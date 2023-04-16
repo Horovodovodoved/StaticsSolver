@@ -1,6 +1,8 @@
+import java.util.List;
+
 public class Matrix {
     private double[][] matrix;
-    private int dimension;
+    private final int dimension;
 
     public Matrix (double[][] matrix) {
         dimension = matrix.length;
@@ -14,18 +16,35 @@ public class Matrix {
         this.matrix = matrix;
     }
 
+    public Matrix(List<double[]> matrix) {
+        dimension = matrix.size();
+        this.matrix = new double[dimension][dimension];
+
+        for(int row = 0; row < dimension; row++) {
+            for(int column = 0; column < dimension; column++) {
+                this.matrix[row][column] = matrix.get(row)[column];
+            }
+        }
+    }
+
     public Matrix (int dimension) {
         this.dimension = dimension;
         matrix = new double[dimension][dimension];
     }
 
     /*
-    Единственный метод, который нужно использовать - solve(для решения матричного уравнения).
+    Единственный метод, который нужно использовать - getAnswer(для решения матричного уравнения).
     Остальные за ненадобностью в остальной части преокта были помечены модификатором private.
      */
 
-    public static double[][] solve(Matrix mainMatrix, Matrix column) {
-        return multiplyMatrices(column.getArray(), inverse(mainMatrix).getArray());
+    public static double[][] getAnswer(Matrix mainMatrix, List<double[]> columnList) {
+        double[][] column = new double[columnList.size()][1];
+
+        for(int row = 0; row < columnList.size(); row++) {
+            column[row][0] = columnList.get(row)[0];
+        }
+
+        return multiplyMatrices(inverse(mainMatrix).getArray(), column);
     }
 
 

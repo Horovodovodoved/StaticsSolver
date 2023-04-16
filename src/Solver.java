@@ -5,13 +5,13 @@ public class Solver {
   Answer answer;
   ArrayList<double[]> A = new ArrayList<>();
   ArrayList<double[]> b = new ArrayList<>();
-  
+
   public Solver(Task task) {
     this.task = task;
     makeMatrixEquation();
-    answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
+    //answer = new Answer(Matrix.getAnswer(new Matrix(A), b));
   }
-  
+
   public Answer getAnswer() { //todo
     return null;
   }
