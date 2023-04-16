@@ -7,7 +7,7 @@ public class Answer {
   
   public void addNextBody() {
     ++current_body_number;
-    strings.add(String.format("\nСилы, приложенные к телу №%d:",
+    strings.add(String.format("\nСилы, приложенные к телу №%d:\n",
         current_body_number));
   }
   
@@ -17,7 +17,7 @@ public class Answer {
     strings.add(String.format("точка: (%.1f; %.1f)",
         force.getPoint().getX(), force.getPoint().getY()));
     strings.add(String.format("величина: %.2f:", force.getValue()));
-    strings.add(String.format("угол: %.1f°", force.getAngle()));
+    strings.add(String.format("угол: %.1f°\n", force.getAngle()));
   }
   
   public ArrayList<String> getStrings() {

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Solver {
   Task task;
-  Answer answer;
+  Answer answer = new Answer();
   double[][] answer_column;
   ArrayList<double[]> A = new ArrayList<>();
   ArrayList<double[]> b = new ArrayList<>();
@@ -10,19 +10,12 @@ public class Solver {
   public Solver(Task task) {
     this.task = task;
     makeMatrixEquation();
-    // answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
     answer_column = Matrix.getAnswer(new Matrix(A), b);
     setDiscoveredForcesValues();
     setAnswer();
   }
   
-  // костыльный, для тестов, todo: нормальный getAnswer()
-//  public ArrayList<ArrayList<double[]>> getAnswer() {
-//    ArrayList<ArrayList<double[]>> a = new ArrayList<>();
-//    a.add(A);
-//    a.add(b);
-//    return a;
-//  }
+  // todo: getAnswer()
   
   // What do we have? 5 types of equations!
   // What do we need? As many equations, as unknown variables!
@@ -45,9 +38,9 @@ public class Solver {
           force.setValue(Math.sqrt(
               Math.pow(answer_column[force.getXId() - 1][0], 2) +
                   Math.pow(answer_column[force.getYId() - 1][0], 2)));
-          // a = tg(f_y / f_x)
+          // a = arctg(f_y / f_x)? Нет, всё немного сложнее...
           force.setAngle(Math.toDegrees(
-              Math.atan(answer_column[force.getYId() - 1][0] /
+              Math.atan2(answer_column[force.getYId() - 1][0],
                   answer_column[force.getXId() - 1][0])));
         }
       }
