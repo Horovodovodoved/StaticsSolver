@@ -11,7 +11,7 @@ public class Solver {
     this.task = task;
     makeMatrixEquation();
     // answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
-    answer_column = Matrix.getAnswer(new Matrix(A), new Matrix(b));
+    answer_column = Matrix.getAnswer(new Matrix(A), b);
     setDiscoveredForcesValues();
     setAnswer();
   }
