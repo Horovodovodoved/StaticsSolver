@@ -3,22 +3,30 @@ import java.util.ArrayList;
 public class Solver {
   Task task;
   Answer answer;
+  double[][] answer_column;
   ArrayList<double[]> A = new ArrayList<>();
   ArrayList<double[]> b = new ArrayList<>();
   
   public Solver(Task task) {
     this.task = task;
     makeMatrixEquation();
-    answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
+    // answer = new Answer(Matrix.getAnswer(new Matrix(A), new Matrix(b)));
+    answer_column = Matrix.getAnswer(new Matrix(A), new Matrix(b));
+    setDiscoveredForcesValues();
+    setAnswer();
   }
   
-  public Answer getAnswer() { //todo
-    return null;
-  }
+  // костыльный, для тестов, todo: нормальный getAnswer()
+//  public ArrayList<ArrayList<double[]>> getAnswer() {
+//    ArrayList<ArrayList<double[]>> a = new ArrayList<>();
+//    a.add(A);
+//    a.add(b);
+//    return a;
+//  }
   
-  // We have 5 types of equations
-  // We need as many equations, as unknown variables
-  // We are mathematicians
+  // What do we have? 5 types of equations!
+  // What do we need? As many equations, as unknown variables!
+  // Who are we?! Mathematicians!!!
   private void makeMatrixEquation() {
     addXEquations();
     addYEquations();
@@ -26,8 +34,39 @@ public class Solver {
     addKnownAngleEquations();
     addHingedConnectionEquations();
     checkEquationsNumber();
-    // todo: решить Ax=b, т. е. найти x;
-    //  придумать, каким будет Answer и подогнать под него имеющийся ответ
+  }
+  
+  private void setDiscoveredForcesValues() {
+    for (Body body : task.getBodies()) {
+      for (Force force : body.getForces()) {
+        if (!force.IsForceKnown()) {
+          // "... - 1" is because of 1-numeration!!!!!!!!!!!!
+          // f = sqrt(f_x**2 + f_y**2)
+          force.setValue(Math.sqrt(
+              Math.pow(answer_column[force.getXId() - 1][0], 2) +
+                  Math.pow(answer_column[force.getYId() - 1][0], 2)));
+          // a = tg(f_y / f_x)
+          force.setAngle(Math.toDegrees(
+              Math.atan(answer_column[force.getYId() - 1][0] /
+                  answer_column[force.getXId() - 1][0])));
+        }
+      }
+    }
+  }
+  
+  private void setAnswer() { // Your eyes don't deceive you. It's private.
+    for (Body body : task.getBodies()) {
+      answer.addNextBody();
+      for (Force force : body.getForces()) {
+        answer.addNextForce(force);
+      }
+    }
+  }
+  
+  public void printAnswer() {
+    for (String s : answer.getStrings()) {
+      System.out.println(s);
+    }
   }
   
   private void addXEquations() {
@@ -76,5 +115,18 @@ public class Solver {
     //   выкинуть лишние
     // если меньше:
     //   выдать ошибку
+    
+    // пока просто выкинем нулевые строки
+    iterating_by_rows:
+    for (int i = 0; i < A.size(); ++i) {
+      for (int j = 0; j < Task.getVariablesNum(); j++) {
+        if (A.get(i)[j] != 0) {
+          continue iterating_by_rows;
+        }
+      }
+      A.remove(i);
+      b.remove(i);
+      --i;
+    }
   }
 }
