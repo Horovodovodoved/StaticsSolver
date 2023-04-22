@@ -12,8 +12,10 @@ import java.util.ArrayList;
 // лишь к одному из тел в этом соединении.
 //
 // todo:
+//  _
 //  Можно добавить шершавую опору: две силы, про одну известен угол (нормали), а
 //  другая связана с первой коэффициентом трения покоя.
+//  ПРОБЛЕМА: нужно уметь решать системы с уравнениями с квадратами неизвестных
 //  _
 //  Можно добавить известный момент: эквивалентно двум равным силам,
 //  приложенным к разным точкам.
@@ -36,6 +38,7 @@ public class Task {
   private static int variables_num = 0;
   private ArrayList<Body> bodies = new ArrayList<>();
   private ArrayList<HingedConnection> hinged_connections = new ArrayList<>();
+  private ArrayList<RoughSupport> rough_supports = new ArrayList<>();
   
   public void setBodies(int num) {
     for (int i = 0; i < num; i++) {
@@ -88,6 +91,23 @@ public class Task {
   
   public ArrayList<HingedConnection> getHingedConnections() {
     return hinged_connections;
+  }
+  
+  public ArrayList<RoughSupport> getRoughSupports() {
+    return rough_supports;
+  }
+  
+  public void addRoughSupport(int body_index, Point point,
+                              double normal_angle, double friction_coef) {
+    Force normal_force = new Force(body_index, point, normal_angle,
+        variables_num + 1, variables_num + 2);
+    Force friction_force = new Force(body_index, point, normal_angle + 90,
+        variables_num + 3, variables_num + 4);
+    bodies.get(body_index).addForce(normal_force);
+    bodies.get(body_index).addForce(friction_force);
+    variables_num += 4;
+    rough_supports.add(new RoughSupport(normal_force, friction_force,
+        friction_coef));
   }
   
   public static int getVariablesNum() { return variables_num; }

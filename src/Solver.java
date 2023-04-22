@@ -26,6 +26,7 @@ public class Solver {
     addMEquations();
     addKnownAngleEquations();
     addHingedConnectionEquations();
+    addRoughSupportEquations();
     checkEquationsNumber();
   }
   
@@ -97,6 +98,15 @@ public class Solver {
     for (HingedConnection hc : task.getHingedConnections()) {
       A.add(hc.getXCoefs());
       A.add(hc.getYCoefs());
+      b.add(new double[]{0});
+      b.add(new double[]{0});
+    }
+  }
+  
+  private void addRoughSupportEquations() {
+    for (RoughSupport rs : task.getRoughSupports()) {
+      A.add(rs.getXCoefs());
+      A.add(rs.getYCoefs());
       b.add(new double[]{0});
       b.add(new double[]{0});
     }
