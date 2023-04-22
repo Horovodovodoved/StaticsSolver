@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Solver {
   Task task;
   Answer answer = new Answer();
-  double[][] answer_column;
+  double[] answer_column;
   ArrayList<double[]> A = new ArrayList<>();
   ArrayList<double[]> b = new ArrayList<>();
   
@@ -36,12 +36,12 @@ public class Solver {
           // "... - 1" is because of 1-numeration!!!!!!!!!!!!
           // f = sqrt(f_x**2 + f_y**2)
           force.setValue(Math.sqrt(
-              Math.pow(answer_column[force.getXId() - 1][0], 2) +
-                  Math.pow(answer_column[force.getYId() - 1][0], 2)));
+              Math.pow(answer_column[force.getXId() - 1], 2) +
+                  Math.pow(answer_column[force.getYId() - 1], 2)));
           // a = arctg(f_y / f_x)? Нет, всё немного сложнее...
           force.setAngle(Math.toDegrees(
-              Math.atan2(answer_column[force.getYId() - 1][0],
-                  answer_column[force.getXId() - 1][0])));
+              Math.atan2(answer_column[force.getYId() - 1],
+                  answer_column[force.getXId() - 1])));
         }
       }
     }
@@ -88,7 +88,7 @@ public class Solver {
     for (Body body : task.getBodies()) {
       A.addAll(body.getKnownAngleCoefs());
     }
-    for (int i = 0; i < A.size() - b.size(); i++) {
+    while(A.size() - b.size() > 0) {
       b.add(new double[]{0});
     }
   }
